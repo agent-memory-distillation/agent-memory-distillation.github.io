@@ -269,19 +269,49 @@ table.data tr.group-row th{
   font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--ink);font-weight:600;padding-top:14px;padding-bottom:8px;
 }
-table.data tr.teacher-row td, table.data tr.teacher-row th{background:#F5F9F5;color:var(--ok);font-weight:500}
+table.data tr.teacher-row td, table.data tr.teacher-row th{background:#F1F7F3;color:var(--ok);font-weight:500}
 table.data tr.teacher-row th{color:var(--ok);font-weight:700}
-table.data tr.amd-row td, table.data tr.amd-row th{background:#F5F8FC;font-weight:700;color:var(--ink)}
-table.data tr.amd-row th{color:var(--wf)}
+table.data tr.amd-row td, table.data tr.amd-row th{background:#EDF2F9;font-weight:700;color:var(--ink);position:relative}
+table.data tr.amd-row th{color:var(--wf);position:relative}
+table.data tr.amd-row th::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:var(--wf)}
 table.data tr.delta-row td, table.data tr.delta-row th{background:#F3F7F5;color:var(--ok);font-weight:600}
 table.data tr.delta-row th{font-family:var(--display);text-transform:none;letter-spacing:0}
 table.data td.best{font-weight:700;color:var(--ink)}
-table.data td.best::after{content:"";display:inline-block;width:0;height:0}
 table.data td.rank1{font-weight:700}
 table.data td.rank2{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ink-faint)}
 table.data tbody tr:hover td, table.data tbody tr:hover th{background:#EEF1F5}
-table.data tbody tr.teacher-row:hover td, table.data tbody tr.teacher-row:hover th{background:#EDF4EE}
-table.data tbody tr.amd-row:hover td, table.data tbody tr.amd-row:hover th{background:#E9EEF6}
+table.data tbody tr.teacher-row:hover td, table.data tbody tr.teacher-row:hover th{background:#E8F1EB}
+table.data tbody tr.amd-row:hover td, table.data tbody tr.amd-row:hover th{background:#E3EBF5}
+
+/* delta pill */
+.delta-pill{display:inline-flex;align-items:center;gap:3px;font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums;padding:3px 10px 3px 8px;border-radius:999px;font-size:12.5px;background:#E7F3EC;color:var(--ok);border:1px solid #C5DFCE;line-height:1.35}
+.delta-pill.high{background:#CFE7D7;color:#1F6A3F;font-size:13.5px}
+.delta-pill.mid{background:#DDECE1}
+.delta-pill.low{background:#EEF4F0;color:#4E866A;border-color:#DDE6E0}
+.delta-pill .arr{font-size:10px;line-height:1}
+
+/* inline value bar (0..100 scale, shown below number) */
+td.val{position:relative;text-align:right;padding-right:14px;padding-bottom:16px}
+td.val .track{position:absolute;left:14px;right:14px;bottom:6px;height:3px;background:#EEF1F5;border-radius:2px;overflow:hidden}
+td.val .fill{position:absolute;left:0;top:0;bottom:0;background:#B7BEC9;border-radius:2px;width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+tr.amd-row td.val .fill{background:linear-gradient(90deg,var(--wf),#5b8ab6)}
+tr.teacher-row td.val .fill{background:#7bad8f}
+tr.delta-row td.val{padding-bottom:12px}
+tr.delta-row td.val .track{display:none}
+
+/* best cell marker */
+td.rank1{position:relative}
+td.rank1::after{content:"★";position:absolute;right:4px;top:6px;font-size:9px;color:var(--wf);opacity:.75}
+
+/* legend row */
+.table-legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);background:#FAFBFD;font-family:var(--display);font-size:12px;color:var(--ink-soft)}
+.legend-chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:#fff}
+.legend-chip .sw{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend-chip.teacher .sw{background:#7bad8f}
+.legend-chip.amd .sw{background:var(--wf)}
+.legend-chip.delta .sw{background:linear-gradient(90deg,#CFE7D7,#7bad8f)}
+.legend-note{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--ink-faint);text-transform:uppercase}
+
 .badge-code, .badge-text{font-family:var(--mono);font-size:11.5px;padding:2px 10px;border-radius:999px;font-weight:600;letter-spacing:.02em;display:inline-block;min-width:52px;text-align:center}
 .badge-code{background:#EEF1F5;color:var(--ink)}
 .badge-text{background:#FAF0E6;color:var(--st)}
@@ -379,7 +409,7 @@ footer a{color:var(--ink-soft)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8l8 8M16 8l-8 8"/></svg>
       arXiv
     </a>
-    <a class="btn" href="#">
+    <a class="btn" href="https://github.com/taeilkim2465/agentic_memory_distillation/tree/main" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-1-2.6c3.2-.4 6.5-1.6 6.5-7A5.4 5.4 0 0 0 20 4.8 5 5 0 0 0 19.9 1S18.7.6 16 2.5a13.4 13.4 0 0 0-7 0C6.3.6 5.1 1 5.1 1A5 5 0 0 0 5 4.8a5.4 5.4 0 0 0-1.5 3.7c0 5.4 3.3 6.6 6.4 7a3.4 3.4 0 0 0-1 2.6V22"/></svg>
       Code
     </a>
@@ -392,8 +422,31 @@ footer a{color:var(--ink-soft)}
 
 <div class="diagram-wrap rise d4">
   <div class="diagram-card">
-    <svg viewBox="0 0 880 330" role="img" aria-label="AMD overview: a teacher agent's successful trajectories are distilled into three memory levels (Workflow, Subtask, Function) that are injected into a small student agent proactively and reactively.">
+    <svg viewBox="0 0 960 400" role="img" aria-label="AMD overview: a teacher agent's successful trajectories are distilled into three memory levels (Workflow, Subtask, Function) that are injected into a small student agent proactively and reactively.">
       <defs>
+        <linearGradient id="teacherGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#242A38"/>
+          <stop offset="100%" stop-color="#0E1220"/>
+        </linearGradient>
+        <linearGradient id="studentGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="100%" stop-color="#EEF2F7"/>
+        </linearGradient>
+        <linearGradient id="wfGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#E7EFF7"/>
+          <stop offset="100%" stop-color="#F6FAFD"/>
+        </linearGradient>
+        <linearGradient id="stGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#F8EBDD"/>
+          <stop offset="100%" stop-color="#FDF6EC"/>
+        </linearGradient>
+        <linearGradient id="fnGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#EEE7F6"/>
+          <stop offset="100%" stop-color="#F8F4FC"/>
+        </linearGradient>
+        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="6" stdDeviation="10" flood-opacity=".1"/>
+        </filter>
         <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0 0 L10 5 L0 10 z" fill="#8B94A6"/>
         </marker>
@@ -401,35 +454,91 @@ footer a{color:var(--ink-soft)}
           <path d="M0 0 L10 5 L0 10 z" fill="#6A4CA0"/>
         </marker>
       </defs>
-      <rect x="30" y="112" width="168" height="96" rx="14" fill="#171C26"/>
-      <text x="114" y="152" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#fff">Teacher</text>
-      <text x="114" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#AEB6C6">GPT-5-mini</text>
-      <text x="114" y="230" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#8B94A6">successful trajectories 𝒟₊ᵀ</text>
-      <path class="flowdash" d="M198 160 H258" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
-      <text x="228" y="146" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#8B94A6">distill</text>
-      <rect x="262" y="42" width="356" height="248" rx="16" fill="#F6F7F9" stroke="#E2E6EC"/>
-      <text x="440" y="30" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" letter-spacing="1.5" fill="#8B94A6">HIERARCHICAL MEMORY 𝓜</text>
-      <rect x="284" y="62" width="312" height="62" rx="10" fill="#EBF2F8" stroke="#2E5E8C" stroke-width="1.5"/>
-      <text x="302" y="88" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#2E5E8C">Workflow</text>
-      <text x="302" y="108" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Task-level strategy &amp; plan</text>
-      <rect x="284" y="134" width="312" height="62" rx="10" fill="#FAF0E6" stroke="#C05E1A" stroke-width="1.5"/>
-      <text x="302" y="160" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#C05E1A">Subtask</text>
-      <text x="302" y="180" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Concrete behavioral examples</text>
-      <rect x="284" y="206" width="312" height="62" rx="10" fill="#F1EDF8" stroke="#6A4CA0" stroke-width="1.5"/>
-      <text x="302" y="232" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#6A4CA0">Function</text>
-      <text x="302" y="252" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Per-function call guides &amp; pitfalls</text>
-      <path class="flowdash" d="M596 93 C 660 93, 660 140, 706 148" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
-      <path class="flowdash" d="M596 165 H706" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
-      <text x="652" y="128" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#8B94A6">proactive</text>
-      <path class="flowdash" d="M596 237 C 660 237, 660 192, 706 184" stroke="#6A4CA0" stroke-width="2" fill="none" marker-end="url(#arr-fn)"/>
-      <text x="652" y="226" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6A4CA0">on error</text>
-      <rect x="710" y="122" width="140" height="76" rx="14" fill="#fff" stroke="#171C26" stroke-width="2"/>
-      <text x="780" y="155" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="16" fill="#171C26">Student</text>
-      <text x="780" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#8B94A6">4B to 8B</text>
-      <text x="780" y="226" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="12.5" fill="#2F7D4F">↑ teacher-level accuracy</text>
+
+      <!-- Task chip -->
+      <g>
+        <rect x="240" y="8" width="480" height="34" rx="17" fill="#FFFFFF" stroke="#E2E6EC"/>
+        <circle cx="262" cy="25" r="5" fill="#2F7D4F"/>
+        <text x="278" y="29" font-family="IBM Plex Mono,monospace" font-size="10.5" letter-spacing="1.5" fill="#8B94A6">TASK</text>
+        <text x="316" y="29" font-family="Schibsted Grotesk,sans-serif" font-weight="500" font-size="13" fill="#171C26">How much money have I sent on Venmo this month?</text>
+      </g>
+
+      <!-- Teacher block -->
+      <g filter="url(#softShadow)">
+        <rect x="24" y="140" width="196" height="140" rx="16" fill="url(#teacherGrad)"/>
+      </g>
+      <text x="44" y="170" font-family="IBM Plex Mono,monospace" font-size="10.5" letter-spacing="1.5" fill="#7C8598">TEACHER</text>
+      <text x="44" y="193" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#FFFFFF">GPT-5-mini</text>
+      <line x1="44" y1="207" x2="200" y2="207" stroke="#2A3143"/>
+      <text x="44" y="230" font-family="Schibsted Grotesk,sans-serif" font-size="12" fill="#AEB6C6">AppWorld</text>
+      <text x="200" y="230" text-anchor="end" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="16" fill="#FFFFFF">50.0%</text>
+      <text x="44" y="254" font-family="Schibsted Grotesk,sans-serif" font-size="12" fill="#AEB6C6">Uses only</text>
+      <text x="200" y="254" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12" fill="#61C583">✓ 𝒟₊ᵀ</text>
+
+      <!-- Distill arrow -->
+      <path class="flowdash" d="M220 210 H252" stroke="#8B94A6" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
+      <text x="236" y="196" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#8B94A6" letter-spacing="1.5">DISTILL</text>
+
+      <!-- Memory container -->
+      <g filter="url(#softShadow)">
+        <rect x="256" y="60" width="440" height="320" rx="18" fill="#FBFCFD" stroke="#E2E6EC"/>
+      </g>
+      <text x="476" y="52" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" letter-spacing="1.6" fill="#8B94A6">HIERARCHICAL MEMORY 𝓜</text>
+
+      <!-- Workflow row -->
+      <rect x="272" y="74" width="408" height="92" rx="12" fill="url(#wfGrad)" stroke="#2E5E8C" stroke-width="1.4"/>
+      <circle cx="298" cy="120" r="15" fill="#2E5E8C"/>
+      <text x="298" y="125" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">W</text>
+      <text x="326" y="99" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="11" letter-spacing=".08em" fill="#2E5E8C">WORKFLOW · task strategy</text>
+      <text x="326" y="120" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="13.5" fill="#171C26">Verbalized plan with typed slots</text>
+      <text x="326" y="146" font-family="IBM Plex Mono,monospace" font-size="11" fill="#4A5364">1. Login. 2. Filter by month. 3. Sum sent amounts.</text>
+
+      <!-- Subtask row -->
+      <rect x="272" y="176" width="408" height="92" rx="12" fill="url(#stGrad)" stroke="#C05E1A" stroke-width="1.4"/>
+      <circle cx="298" cy="222" r="15" fill="#C05E1A"/>
+      <text x="298" y="227" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">S</text>
+      <text x="326" y="201" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="11" letter-spacing=".08em" fill="#C05E1A">SUBTASK · executable segment</text>
+      <text x="326" y="222" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="13.5" fill="#171C26">Teacher's code &amp; observations</text>
+      <text x="326" y="248" font-family="IBM Plex Mono,monospace" font-size="11" fill="#4A5364">venmo.login(email=&lt;EMAIL&gt;, password=&lt;PW&gt;)</text>
+
+      <!-- Function row -->
+      <rect x="272" y="278" width="408" height="92" rx="12" fill="url(#fnGrad)" stroke="#6A4CA0" stroke-width="1.4"/>
+      <circle cx="298" cy="324" r="15" fill="#6A4CA0"/>
+      <text x="298" y="329" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">F</text>
+      <text x="326" y="303" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="11" letter-spacing=".08em" fill="#6A4CA0">FUNCTION · call-level guide</text>
+      <text x="326" y="324" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="13.5" fill="#171C26">Per-function pitfalls &amp; reasoning</text>
+      <text x="326" y="350" font-family="IBM Plex Mono,monospace" font-size="11" fill="#4A5364">venmo.login: username must be an email address.</text>
+
+      <!-- Proactive arrows: WF and ST → student -->
+      <path class="flowdash" d="M680 120 C 706 120, 706 180, 730 188" stroke="#8B94A6" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
+      <path class="flowdash" d="M680 222 H730" stroke="#8B94A6" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
+      <g>
+        <rect x="694" y="152" width="72" height="18" rx="9" fill="#F1F4F9" stroke="#D0D6E0"/>
+        <text x="730" y="164" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".1em" fill="#4A5364">PROACTIVE</text>
+      </g>
+
+      <!-- Reactive arrow: FN → student -->
+      <path class="flowdash" d="M680 324 C 706 324, 706 250, 730 240" stroke="#6A4CA0" stroke-width="2.5" fill="none" marker-end="url(#arr-fn)"/>
+      <g>
+        <rect x="700" y="280" width="88" height="18" rx="9" fill="#F1EDF8" stroke="#C9BCE0"/>
+        <text x="744" y="292" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".1em" fill="#6A4CA0">REACTIVE · ON ERROR</text>
+      </g>
+
+      <!-- Student block -->
+      <g filter="url(#softShadow)">
+        <rect x="740" y="140" width="200" height="140" rx="16" fill="url(#studentGrad)" stroke="#171C26" stroke-width="1.5"/>
+      </g>
+      <text x="760" y="170" font-family="IBM Plex Mono,monospace" font-size="10.5" letter-spacing="1.5" fill="#8B94A6">STUDENT</text>
+      <text x="760" y="193" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#171C26">Qwen3-4B</text>
+      <text x="760" y="210" font-family="Schibsted Grotesk,sans-serif" font-size="11.5" fill="#8B94A6">12× smaller · no fine-tuning</text>
+      <line x1="760" y1="222" x2="920" y2="222" stroke="#E2E6EC"/>
+      <text x="760" y="248" font-family="Schibsted Grotesk,sans-serif" font-size="12" fill="#4A5364">AppWorld acc.</text>
+      <text x="920" y="252" text-anchor="end" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="22" fill="#171C26">49.4%</text>
+      <rect x="760" y="258" width="106" height="18" rx="9" fill="#E7F3EC" stroke="#C5DFCE"/>
+      <text x="813" y="271" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="11.5" fill="#2F7D4F">▲ +34.5 %p gain</text>
     </svg>
     <div class="diagram-caption">
-      Teacher trajectories → <b>Workflow · Subtask · Function</b> memory → injected proactively before execution &amp; reactively on error.
+      Teacher trajectories → <b>Workflow · Subtask · Function</b> memory, injected proactively before execution and reactively on error.
     </div>
   </div>
 </div>
@@ -467,7 +576,10 @@ footer a{color:var(--ink-soft)}
       <span class="num count" data-target="49.4" data-decimals="1" data-prefix="" data-suffix="">49.4</span><span class="suf">/&nbsp;50.0</span>
     </div>
     <p class="stat-hook">A 4B model reaches <strong>teacher-level accuracy on AppWorld</strong>. Zero fine-tuning, memory only.</p>
-    <div class="bar-note">Same benchmark, one twelfth the parameters. Memory alone.</div>
+    <div class="stat-bars">
+      <div class="bar-row"><span class="bar-lab">Teacher</span><div class="bar-track"><div class="bar-fill teacher grow" data-w="83">50.00</div></div></div>
+      <div class="bar-row"><span class="bar-lab">AMD (4B)</span><div class="bar-track"><div class="bar-fill hi grow" data-w="82">49.40</div></div></div>
+    </div>
   </div>
 </div>
 
@@ -556,7 +668,13 @@ footer a{color:var(--ink-soft)}
   <div class="tablecard">
     <div class="th">
       <b>Table 1 · Main results on three agentic benchmarks</b>
-      <span class="tag">Accuracy (%)</span>
+      <span class="tag">Accuracy (%) · higher ↑</span>
+    </div>
+    <div class="table-legend">
+      <span class="legend-chip teacher"><span class="sw"></span>Teacher</span>
+      <span class="legend-chip amd"><span class="sw"></span>AMD (ours)</span>
+      <span class="legend-chip delta"><span class="sw"></span>Δ gain vs. zero-shot</span>
+      <span class="legend-note">Bars show 0 to 100</span>
     </div>
     <div class="tablewrap">
       <table class="data">
@@ -572,38 +690,94 @@ footer a{color:var(--ink-soft)}
           <tr class="group-row"><th colspan="4">Teacher Agent</th></tr>
           <tr class="teacher-row">
             <th>GPT-5-mini</th>
-            <td>50.00</td><td>36.50</td><td>28.68</td>
+            <td class="val">50.00<span class="track"><span class="fill" data-w="50"></span></span></td>
+            <td class="val">36.50<span class="track"><span class="fill" data-w="36.5"></span></span></td>
+            <td class="val">28.68<span class="track"><span class="fill" data-w="28.68"></span></span></td>
           </tr>
 
           <tr class="group-row"><th colspan="4">Student · Qwen3-4B</th></tr>
-          <tr><th>Zero-shot</th><td>14.88</td><td>15.50</td><td>16.28</td></tr>
-          <tr><th>ReasoningBank</th><td>10.71</td><td>24.25</td><td>16.28</td></tr>
-          <tr><th>MemP</th><td>15.48</td><td>28.25</td><td>14.73</td></tr>
-          <tr><th>SASM</th><td>14.88</td><td>15.25</td><td>18.22</td></tr>
-          <tr class="amd-row"><th>AMD (ours)</th><td>49.40</td><td>38.50</td><td>20.16</td></tr>
-          <tr class="delta-row"><th>Δ vs. zero-shot</th><td>+34.52</td><td>+23.00</td><td>+3.88</td></tr>
+          <tr><th>Zero-shot</th>
+            <td class="val">14.88<span class="track"><span class="fill" data-w="14.88"></span></span></td>
+            <td class="val">15.50<span class="track"><span class="fill" data-w="15.5"></span></span></td>
+            <td class="val">16.28<span class="track"><span class="fill" data-w="16.28"></span></span></td></tr>
+          <tr><th>ReasoningBank</th>
+            <td class="val">10.71<span class="track"><span class="fill" data-w="10.71"></span></span></td>
+            <td class="val">24.25<span class="track"><span class="fill" data-w="24.25"></span></span></td>
+            <td class="val">16.28<span class="track"><span class="fill" data-w="16.28"></span></span></td></tr>
+          <tr><th>MemP</th>
+            <td class="val">15.48<span class="track"><span class="fill" data-w="15.48"></span></span></td>
+            <td class="val">28.25<span class="track"><span class="fill" data-w="28.25"></span></span></td>
+            <td class="val">14.73<span class="track"><span class="fill" data-w="14.73"></span></span></td></tr>
+          <tr><th>SASM</th>
+            <td class="val">14.88<span class="track"><span class="fill" data-w="14.88"></span></span></td>
+            <td class="val">15.25<span class="track"><span class="fill" data-w="15.25"></span></span></td>
+            <td class="val">18.22<span class="track"><span class="fill" data-w="18.22"></span></span></td></tr>
+          <tr class="amd-row"><th>AMD (ours)</th>
+            <td class="val rank1">49.40<span class="track"><span class="fill" data-w="49.4"></span></span></td>
+            <td class="val rank1">38.50<span class="track"><span class="fill" data-w="38.5"></span></span></td>
+            <td class="val rank1">20.16<span class="track"><span class="fill" data-w="20.16"></span></span></td></tr>
+          <tr class="delta-row"><th>Δ vs. zero-shot</th>
+            <td class="val"><span class="delta-pill high"><span class="arr">▲</span>+34.5</span></td>
+            <td class="val"><span class="delta-pill high"><span class="arr">▲</span>+23.0</span></td>
+            <td class="val"><span class="delta-pill low"><span class="arr">▲</span>+3.9</span></td></tr>
 
           <tr class="group-row"><th colspan="4">Student · Gemma4-E4B</th></tr>
-          <tr><th>Zero-shot</th><td>24.40</td><td>37.25</td><td>18.22</td></tr>
-          <tr><th>ReasoningBank</th><td>30.36</td><td>40.25</td><td>15.12</td></tr>
-          <tr><th>MemP</th><td>20.83</td><td>35.25</td><td>15.89</td></tr>
-          <tr><th>SASM</th><td>22.02</td><td>36.75</td><td>12.40</td></tr>
-          <tr class="amd-row"><th>AMD (ours)</th><td>54.17</td><td>46.00</td><td>21.71</td></tr>
-          <tr class="delta-row"><th>Δ vs. zero-shot</th><td>+29.77</td><td>+8.75</td><td>+3.50</td></tr>
+          <tr><th>Zero-shot</th>
+            <td class="val">24.40<span class="track"><span class="fill" data-w="24.4"></span></span></td>
+            <td class="val">37.25<span class="track"><span class="fill" data-w="37.25"></span></span></td>
+            <td class="val">18.22<span class="track"><span class="fill" data-w="18.22"></span></span></td></tr>
+          <tr><th>ReasoningBank</th>
+            <td class="val">30.36<span class="track"><span class="fill" data-w="30.36"></span></span></td>
+            <td class="val">40.25<span class="track"><span class="fill" data-w="40.25"></span></span></td>
+            <td class="val">15.12<span class="track"><span class="fill" data-w="15.12"></span></span></td></tr>
+          <tr><th>MemP</th>
+            <td class="val">20.83<span class="track"><span class="fill" data-w="20.83"></span></span></td>
+            <td class="val">35.25<span class="track"><span class="fill" data-w="35.25"></span></span></td>
+            <td class="val">15.89<span class="track"><span class="fill" data-w="15.89"></span></span></td></tr>
+          <tr><th>SASM</th>
+            <td class="val">22.02<span class="track"><span class="fill" data-w="22.02"></span></span></td>
+            <td class="val">36.75<span class="track"><span class="fill" data-w="36.75"></span></span></td>
+            <td class="val">12.40<span class="track"><span class="fill" data-w="12.4"></span></span></td></tr>
+          <tr class="amd-row"><th>AMD (ours)</th>
+            <td class="val rank1">54.17<span class="track"><span class="fill" data-w="54.17"></span></span></td>
+            <td class="val rank1">46.00<span class="track"><span class="fill" data-w="46"></span></span></td>
+            <td class="val rank1">21.71<span class="track"><span class="fill" data-w="21.71"></span></span></td></tr>
+          <tr class="delta-row"><th>Δ vs. zero-shot</th>
+            <td class="val"><span class="delta-pill high"><span class="arr">▲</span>+29.8</span></td>
+            <td class="val"><span class="delta-pill mid"><span class="arr">▲</span>+8.8</span></td>
+            <td class="val"><span class="delta-pill low"><span class="arr">▲</span>+3.5</span></td></tr>
 
           <tr class="group-row"><th colspan="4">Student · Qwen3-8B</th></tr>
-          <tr><th>Zero-shot</th><td>25.60</td><td>38.00</td><td>20.16</td></tr>
-          <tr class="amd-row"><th>AMD (ours)</th><td>51.79</td><td>45.50</td><td>25.58</td></tr>
-          <tr class="delta-row"><th>Δ vs. zero-shot</th><td>+26.19</td><td>+7.50</td><td>+5.42</td></tr>
+          <tr><th>Zero-shot</th>
+            <td class="val">25.60<span class="track"><span class="fill" data-w="25.6"></span></span></td>
+            <td class="val">38.00<span class="track"><span class="fill" data-w="38"></span></span></td>
+            <td class="val">20.16<span class="track"><span class="fill" data-w="20.16"></span></span></td></tr>
+          <tr class="amd-row"><th>AMD (ours)</th>
+            <td class="val rank1">51.79<span class="track"><span class="fill" data-w="51.79"></span></span></td>
+            <td class="val rank1">45.50<span class="track"><span class="fill" data-w="45.5"></span></span></td>
+            <td class="val rank1">25.58<span class="track"><span class="fill" data-w="25.58"></span></span></td></tr>
+          <tr class="delta-row"><th>Δ vs. zero-shot</th>
+            <td class="val"><span class="delta-pill high"><span class="arr">▲</span>+26.2</span></td>
+            <td class="val"><span class="delta-pill mid"><span class="arr">▲</span>+7.5</span></td>
+            <td class="val"><span class="delta-pill mid"><span class="arr">▲</span>+5.4</span></td></tr>
 
           <tr class="group-row"><th colspan="4">Student · Llama3.1-8B</th></tr>
-          <tr><th>Zero-shot</th><td>8.93</td><td>9.00</td><td>5.43</td></tr>
-          <tr class="amd-row"><th>AMD (ours)</th><td>27.38</td><td>14.50</td><td>6.20</td></tr>
-          <tr class="delta-row"><th>Δ vs. zero-shot</th><td>+18.45</td><td>+5.50</td><td>+0.77</td></tr>
+          <tr><th>Zero-shot</th>
+            <td class="val">8.93<span class="track"><span class="fill" data-w="8.93"></span></span></td>
+            <td class="val">9.00<span class="track"><span class="fill" data-w="9"></span></span></td>
+            <td class="val">5.43<span class="track"><span class="fill" data-w="5.43"></span></span></td></tr>
+          <tr class="amd-row"><th>AMD (ours)</th>
+            <td class="val rank1">27.38<span class="track"><span class="fill" data-w="27.38"></span></span></td>
+            <td class="val rank1">14.50<span class="track"><span class="fill" data-w="14.5"></span></span></td>
+            <td class="val rank1">6.20<span class="track"><span class="fill" data-w="6.2"></span></span></td></tr>
+          <tr class="delta-row"><th>Δ vs. zero-shot</th>
+            <td class="val"><span class="delta-pill high"><span class="arr">▲</span>+18.5</span></td>
+            <td class="val"><span class="delta-pill mid"><span class="arr">▲</span>+5.5</span></td>
+            <td class="val"><span class="delta-pill low"><span class="arr">▲</span>+0.8</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div class="tf-note"><b>Bold</b> = AMD (ours). Δ rows show absolute accuracy gain over zero-shot. AMD is the only method that consistently beats zero-shot across every benchmark and model.</div>
+    <div class="tf-note"><b>How to read:</b> Numeric bars scale 0 to 100. Blue rows are AMD (best in group, marked <span style="color:var(--wf)">★</span>). Green Δ pills are gain over zero-shot: darker green means larger jump. AMD is the only method that consistently beats zero-shot across every benchmark and model.</div>
   </div>
 
   <!-- Figure 3: interaction steps -->
@@ -626,8 +800,8 @@ footer a{color:var(--ink-soft)}
   <!-- Table 2 · memory type ablation -->
   <div class="tablecard">
     <div class="th">
-      <b>Table 2 · Ablation on memory types</b>
-      <span class="tag">Accuracy (%)</span>
+      <b>Table 2 · Which memory levels matter?</b>
+      <span class="tag">Accuracy (%) · higher ↑</span>
     </div>
     <div class="tablewrap">
       <table class="data">
@@ -643,12 +817,36 @@ footer a{color:var(--ink-soft)}
           </tr>
         </thead>
         <tbody>
-          <tr><th>Zero-shot</th><td>14.88</td><td>25.60</td><td>15.50</td><td>38.00</td></tr>
-          <tr><th><span class="mem wf">WF</span></th><td>22.02</td><td>30.36</td><td>35.50</td><td>40.00</td></tr>
-          <tr><th><span class="mem wf">WF</span> + <span class="mem fn">FN</span></th><td>24.11</td><td>33.93</td><td>35.50</td><td>41.50</td></tr>
-          <tr><th><span class="mem wf">WF</span> + <span class="mem st">ST</span></th><td>47.02</td><td>51.19</td><td>37.50</td><td>45.50</td></tr>
-          <tr class="amd-row"><th><span class="mem wf">WF</span> + <span class="mem st">ST</span> + <span class="mem fn">FN</span> <em>(AMD)</em></th><td>49.40</td><td>51.79</td><td>38.50</td><td>45.50</td></tr>
-          <tr><th>Student Memory</th><td>16.07</td><td>29.76</td><td>27.00</td><td>43.00</td></tr>
+          <tr><th>Zero-shot</th>
+            <td class="val">14.88<span class="track"><span class="fill" data-w="14.88"></span></span></td>
+            <td class="val">25.60<span class="track"><span class="fill" data-w="25.6"></span></span></td>
+            <td class="val">15.50<span class="track"><span class="fill" data-w="15.5"></span></span></td>
+            <td class="val">38.00<span class="track"><span class="fill" data-w="38"></span></span></td></tr>
+          <tr><th><span class="mem wf">WF</span></th>
+            <td class="val">22.02<span class="track"><span class="fill" data-w="22.02"></span></span></td>
+            <td class="val">30.36<span class="track"><span class="fill" data-w="30.36"></span></span></td>
+            <td class="val">35.50<span class="track"><span class="fill" data-w="35.5"></span></span></td>
+            <td class="val">40.00<span class="track"><span class="fill" data-w="40"></span></span></td></tr>
+          <tr><th><span class="mem wf">WF</span> + <span class="mem fn">FN</span></th>
+            <td class="val">24.11<span class="track"><span class="fill" data-w="24.11"></span></span></td>
+            <td class="val">33.93<span class="track"><span class="fill" data-w="33.93"></span></span></td>
+            <td class="val">35.50<span class="track"><span class="fill" data-w="35.5"></span></span></td>
+            <td class="val">41.50<span class="track"><span class="fill" data-w="41.5"></span></span></td></tr>
+          <tr><th><span class="mem wf">WF</span> + <span class="mem st">ST</span></th>
+            <td class="val">47.02<span class="track"><span class="fill" data-w="47.02"></span></span></td>
+            <td class="val">51.19<span class="track"><span class="fill" data-w="51.19"></span></span></td>
+            <td class="val">37.50<span class="track"><span class="fill" data-w="37.5"></span></span></td>
+            <td class="val">45.50<span class="track"><span class="fill" data-w="45.5"></span></span></td></tr>
+          <tr class="amd-row"><th><span class="mem wf">WF</span> + <span class="mem st">ST</span> + <span class="mem fn">FN</span> <em>(AMD)</em></th>
+            <td class="val rank1">49.40<span class="track"><span class="fill" data-w="49.4"></span></span></td>
+            <td class="val rank1">51.79<span class="track"><span class="fill" data-w="51.79"></span></span></td>
+            <td class="val rank1">38.50<span class="track"><span class="fill" data-w="38.5"></span></span></td>
+            <td class="val rank1">45.50<span class="track"><span class="fill" data-w="45.5"></span></span></td></tr>
+          <tr><th>Student Memory</th>
+            <td class="val">16.07<span class="track"><span class="fill" data-w="16.07"></span></span></td>
+            <td class="val">29.76<span class="track"><span class="fill" data-w="29.76"></span></span></td>
+            <td class="val">27.00<span class="track"><span class="fill" data-w="27"></span></span></td>
+            <td class="val">43.00<span class="track"><span class="fill" data-w="43"></span></span></td></tr>
         </tbody>
       </table>
     </div>
@@ -659,8 +857,8 @@ footer a{color:var(--ink-soft)}
   <div class="result-heads">
     <div class="tablecard">
       <div class="th">
-        <b>Table 3 · Effect of the teacher</b>
-        <span class="tag">Accuracy on AppWorld</span>
+        <b>Table 3 · Which teacher works best?</b>
+        <span class="tag">AppWorld · higher ↑</span>
       </div>
       <div class="tablewrap">
         <table class="data">
@@ -673,42 +871,57 @@ footer a{color:var(--ink-soft)}
             </tr>
           </thead>
           <tbody>
-            <tr><th>Zero-shot</th><td style="color:var(--ink-faint)">n/a</td><td>14.88</td><td>25.60</td></tr>
-            <tr><th>GPT-5.5</th><td>91.08</td><td class="rank2">47.02</td><td class="rank1">58.93</td></tr>
-            <tr><th>DeepSeek V4 Pro</th><td>81.55</td><td>38.10</td><td class="rank2">57.14</td></tr>
-            <tr class="amd-row"><th>GPT-5-mini</th><td>50.00</td><td class="rank1">49.40</td><td>51.79</td></tr>
-            <tr><th>Qwen3-32B</th><td>34.42</td><td>29.76</td><td>39.29</td></tr>
+            <tr><th>Zero-shot</th>
+              <td class="val" style="color:var(--ink-faint)">n/a</td>
+              <td class="val">14.88<span class="track"><span class="fill" data-w="14.88"></span></span></td>
+              <td class="val">25.60<span class="track"><span class="fill" data-w="25.6"></span></span></td></tr>
+            <tr><th>GPT-5.5</th>
+              <td class="val">91.08<span class="track"><span class="fill" data-w="91.08"></span></span></td>
+              <td class="val rank2">47.02<span class="track"><span class="fill" data-w="47.02"></span></span></td>
+              <td class="val rank1">58.93<span class="track"><span class="fill" data-w="58.93"></span></span></td></tr>
+            <tr><th>DeepSeek V4 Pro</th>
+              <td class="val">81.55<span class="track"><span class="fill" data-w="81.55"></span></span></td>
+              <td class="val">38.10<span class="track"><span class="fill" data-w="38.1"></span></span></td>
+              <td class="val rank2">57.14<span class="track"><span class="fill" data-w="57.14"></span></span></td></tr>
+            <tr class="amd-row"><th>GPT-5-mini</th>
+              <td class="val">50.00<span class="track"><span class="fill" data-w="50"></span></span></td>
+              <td class="val rank1">49.40<span class="track"><span class="fill" data-w="49.4"></span></span></td>
+              <td class="val">51.79<span class="track"><span class="fill" data-w="51.79"></span></span></td></tr>
+            <tr><th>Qwen3-32B</th>
+              <td class="val">34.42<span class="track"><span class="fill" data-w="34.42"></span></span></td>
+              <td class="val">29.76<span class="track"><span class="fill" data-w="29.76"></span></span></td>
+              <td class="val">39.29<span class="track"><span class="fill" data-w="39.29"></span></span></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="tf-note"><b>Takeaway:</b> Stronger ≠ better teacher for 4B students. <b>GPT-5-mini (50 %)</b> beats DeepSeek V4 Pro (82 %) as a teacher for Qwen3-4B. Accessible knowledge matters more than raw accuracy. <b>Bold</b> = best, <span style="text-decoration:underline;text-underline-offset:3px">underline</span> = 2nd.</div>
+      <div class="tf-note"><b>Takeaway:</b> Stronger ≠ better teacher for 4B students. <b>GPT-5-mini (50 %)</b> beats DeepSeek V4 Pro (82 %) as a teacher for Qwen3-4B. Accessible knowledge matters more than raw accuracy. <span style="color:var(--wf)">★</span> = best per column, <span style="text-decoration:underline;text-underline-offset:3px">underline</span> = 2nd.</div>
     </div>
 
     <div class="tablecard">
       <div class="th">
-        <b>Table 4 · Memory representation</b>
+        <b>Table 4 · Prose or code, per level?</b>
         <span class="tag">Qwen3-4B · AppWorld</span>
       </div>
       <div class="tablewrap">
         <table class="data">
           <thead>
             <tr>
-              <th><span class="mem wf">Workflow</span></th>
-              <th><span class="mem st">Subtask</span></th>
-              <th><span class="mem fn">Function</span></th>
+              <th style="text-align:left"><span class="mem wf">Workflow</span></th>
+              <th style="text-align:left"><span class="mem st">Subtask</span></th>
+              <th style="text-align:left"><span class="mem fn">Function</span></th>
               <th>Accuracy</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><span class="badge-code">Code</span></td><td><span class="badge-code">Code</span></td><td><span class="badge-code">Code</span></td><td>44.05</td></tr>
-            <tr class="amd-row"><td><span class="badge-text">Text</span></td><td><span class="badge-code">Code</span></td><td><span class="badge-code">Code</span></td><td>49.40</td></tr>
-            <tr><td><span class="badge-text">Text</span></td><td><span class="badge-text">Text</span></td><td><span class="badge-code">Code</span></td><td>23.21</td></tr>
-            <tr><td><span class="badge-text">Text</span></td><td><span class="badge-code">Code</span></td><td><span class="badge-text">Text</span></td><td>47.62</td></tr>
-            <tr><td><span class="badge-text">Text</span></td><td><span class="badge-text">Text</span></td><td><span class="badge-text">Text</span></td><td>26.19</td></tr>
+            <tr><td style="text-align:left"><span class="badge-code">Code</span></td><td style="text-align:left"><span class="badge-code">Code</span></td><td style="text-align:left"><span class="badge-code">Code</span></td><td class="val">44.05<span class="track"><span class="fill" data-w="44.05"></span></span></td></tr>
+            <tr class="amd-row"><td style="text-align:left"><span class="badge-text">Text</span></td><td style="text-align:left"><span class="badge-code">Code</span></td><td style="text-align:left"><span class="badge-code">Code</span></td><td class="val rank1">49.40<span class="track"><span class="fill" data-w="49.4"></span></span></td></tr>
+            <tr><td style="text-align:left"><span class="badge-text">Text</span></td><td style="text-align:left"><span class="badge-text">Text</span></td><td style="text-align:left"><span class="badge-code">Code</span></td><td class="val">23.21<span class="track"><span class="fill" data-w="23.21"></span></span></td></tr>
+            <tr><td style="text-align:left"><span class="badge-text">Text</span></td><td style="text-align:left"><span class="badge-code">Code</span></td><td style="text-align:left"><span class="badge-text">Text</span></td><td class="val">47.62<span class="track"><span class="fill" data-w="47.62"></span></span></td></tr>
+            <tr><td style="text-align:left"><span class="badge-text">Text</span></td><td style="text-align:left"><span class="badge-text">Text</span></td><td style="text-align:left"><span class="badge-text">Text</span></td><td class="val">26.19<span class="track"><span class="fill" data-w="26.19"></span></span></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="tf-note"><b>Takeaway:</b> <b>Prose for plans, code for execution.</b> All-prose collapses to 26.2 %; replacing execution-level memory with prose kills accuracy. AMD's default (Text/Code/Code) is best.</div>
+      <div class="tf-note"><b>Takeaway:</b> <b>Prose for plans, code for execution.</b> All-prose collapses to 26.2 %. Replacing execution-level memory with prose kills accuracy. AMD's default (Text/Code/Code) is best.</div>
     </div>
   </div>
 
@@ -828,12 +1041,17 @@ function animateCount(el){
   }
   requestAnimationFrame(tick);
 }
-// Animate mini bars
+// Animate mini bars (stat cards + inline table cells)
 function growBars(root){
   root.querySelectorAll('.bar-fill.grow:not(.grew)').forEach((b,i)=>{
     const w=parseFloat(b.dataset.w||0);
     if(reduced){b.style.width=w+'%';b.classList.add('grew');return;}
     setTimeout(()=>{b.style.width=w+'%';b.classList.add('grew');},120+i*90);
+  });
+  root.querySelectorAll('td.val .fill:not(.grew)').forEach((b,i)=>{
+    const w=parseFloat(b.dataset.w||0);
+    if(reduced){b.style.width=w+'%';b.classList.add('grew');return;}
+    setTimeout(()=>{b.style.width=w+'%';b.classList.add('grew');},80+i*10);
   });
 }
 // Scroll reveal + trigger counters + bars
@@ -847,7 +1065,7 @@ const io=new IntersectionObserver(entries=>{
     }
   });
 },{threshold:.15});
-document.querySelectorAll('.reveal,.stats').forEach(el=>io.observe(el));
+document.querySelectorAll('.reveal,.stats,.tablecard').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
