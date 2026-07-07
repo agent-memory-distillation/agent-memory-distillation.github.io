@@ -422,30 +422,18 @@ footer a{color:var(--ink-soft)}
 
 <div class="diagram-wrap rise d4">
   <div class="diagram-card">
-    <svg viewBox="0 0 960 400" role="img" aria-label="AMD overview: a teacher agent's successful trajectories are distilled into three memory levels (Workflow, Subtask, Function) that are injected into a small student agent proactively and reactively.">
+    <svg viewBox="0 0 900 320" role="img" aria-label="AMD overview: a teacher agent's successful trajectories are distilled into three memory levels (Workflow, Subtask, Function) that are injected into a small student agent proactively and reactively.">
       <defs>
-        <linearGradient id="teacherGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#242A38"/>
-          <stop offset="100%" stop-color="#0E1220"/>
+        <linearGradient id="teacherGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#232939"/>
+          <stop offset="100%" stop-color="#131722"/>
         </linearGradient>
-        <linearGradient id="studentGrad" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="studentGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#FFFFFF"/>
-          <stop offset="100%" stop-color="#EEF2F7"/>
-        </linearGradient>
-        <linearGradient id="wfGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#E7EFF7"/>
-          <stop offset="100%" stop-color="#F6FAFD"/>
-        </linearGradient>
-        <linearGradient id="stGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#F8EBDD"/>
-          <stop offset="100%" stop-color="#FDF6EC"/>
-        </linearGradient>
-        <linearGradient id="fnGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#EEE7F6"/>
-          <stop offset="100%" stop-color="#F8F4FC"/>
+          <stop offset="100%" stop-color="#F2F5FA"/>
         </linearGradient>
         <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="6" stdDeviation="10" flood-opacity=".1"/>
+          <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity=".08"/>
         </filter>
         <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0 0 L10 5 L0 10 z" fill="#8B94A6"/>
@@ -455,87 +443,66 @@ footer a{color:var(--ink-soft)}
         </marker>
       </defs>
 
-      <!-- Task chip -->
-      <g>
-        <rect x="240" y="8" width="480" height="34" rx="17" fill="#FFFFFF" stroke="#E2E6EC"/>
-        <circle cx="262" cy="25" r="5" fill="#2F7D4F"/>
-        <text x="278" y="29" font-family="IBM Plex Mono,monospace" font-size="10.5" letter-spacing="1.5" fill="#8B94A6">TASK</text>
-        <text x="316" y="29" font-family="Schibsted Grotesk,sans-serif" font-weight="500" font-size="13" fill="#171C26">How much money have I sent on Venmo this month?</text>
-      </g>
-
       <!-- Teacher block -->
       <g filter="url(#softShadow)">
-        <rect x="24" y="140" width="196" height="140" rx="16" fill="url(#teacherGrad)"/>
+        <rect x="30" y="100" width="180" height="120" rx="16" fill="url(#teacherGrad)"/>
       </g>
-      <text x="44" y="170" font-family="IBM Plex Mono,monospace" font-size="10.5" letter-spacing="1.5" fill="#7C8598">TEACHER</text>
-      <text x="44" y="193" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#FFFFFF">GPT-5-mini</text>
-      <line x1="44" y1="207" x2="200" y2="207" stroke="#2A3143"/>
-      <text x="44" y="230" font-family="Schibsted Grotesk,sans-serif" font-size="12" fill="#AEB6C6">AppWorld</text>
-      <text x="200" y="230" text-anchor="end" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="16" fill="#FFFFFF">50.0%</text>
-      <text x="44" y="254" font-family="Schibsted Grotesk,sans-serif" font-size="12" fill="#AEB6C6">Uses only</text>
-      <text x="200" y="254" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12" fill="#61C583">✓ 𝒟₊ᵀ</text>
+      <text x="120" y="145" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#FFFFFF">Teacher</text>
+      <text x="120" y="170" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#AEB6C6">GPT-5-mini</text>
+      <text x="120" y="248" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#8B94A6">successful trajectories 𝒟₊ᵀ</text>
 
       <!-- Distill arrow -->
-      <path class="flowdash" d="M220 210 H252" stroke="#8B94A6" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <text x="236" y="196" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#8B94A6" letter-spacing="1.5">DISTILL</text>
+      <path class="flowdash" d="M210 160 H248" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <g>
+        <rect x="212" y="140" width="46" height="16" rx="8" fill="#FFFFFF" stroke="#E2E6EC"/>
+        <text x="235" y="151" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".1em" fill="#8B94A6">DISTILL</text>
+      </g>
+
+      <!-- Memory container header -->
+      <text x="440" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" letter-spacing="1.6" fill="#8B94A6">HIERARCHICAL MEMORY 𝓜</text>
 
       <!-- Memory container -->
       <g filter="url(#softShadow)">
-        <rect x="256" y="60" width="440" height="320" rx="18" fill="#FBFCFD" stroke="#E2E6EC"/>
+        <rect x="250" y="32" width="380" height="256" rx="16" fill="#FBFCFD" stroke="#E2E6EC"/>
       </g>
-      <text x="476" y="52" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" letter-spacing="1.6" fill="#8B94A6">HIERARCHICAL MEMORY 𝓜</text>
 
       <!-- Workflow row -->
-      <rect x="272" y="74" width="408" height="92" rx="12" fill="url(#wfGrad)" stroke="#2E5E8C" stroke-width="1.4"/>
-      <circle cx="298" cy="120" r="15" fill="#2E5E8C"/>
-      <text x="298" y="125" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">W</text>
-      <text x="326" y="99" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="11" letter-spacing=".08em" fill="#2E5E8C">WORKFLOW · task strategy</text>
-      <text x="326" y="120" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="13.5" fill="#171C26">Verbalized plan with typed slots</text>
-      <text x="326" y="146" font-family="IBM Plex Mono,monospace" font-size="11" fill="#4A5364">1. Login. 2. Filter by month. 3. Sum sent amounts.</text>
+      <rect x="268" y="48" width="344" height="72" rx="12" fill="#EBF2F8" stroke="#2E5E8C" stroke-width="1.4"/>
+      <text x="288" y="78" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#2E5E8C">Workflow</text>
+      <text x="288" y="100" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Task-level strategy &amp; plan</text>
 
       <!-- Subtask row -->
-      <rect x="272" y="176" width="408" height="92" rx="12" fill="url(#stGrad)" stroke="#C05E1A" stroke-width="1.4"/>
-      <circle cx="298" cy="222" r="15" fill="#C05E1A"/>
-      <text x="298" y="227" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">S</text>
-      <text x="326" y="201" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="11" letter-spacing=".08em" fill="#C05E1A">SUBTASK · executable segment</text>
-      <text x="326" y="222" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="13.5" fill="#171C26">Teacher's code &amp; observations</text>
-      <text x="326" y="248" font-family="IBM Plex Mono,monospace" font-size="11" fill="#4A5364">venmo.login(email=&lt;EMAIL&gt;, password=&lt;PW&gt;)</text>
+      <rect x="268" y="126" width="344" height="72" rx="12" fill="#FAF0E6" stroke="#C05E1A" stroke-width="1.4"/>
+      <text x="288" y="156" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#C05E1A">Subtask</text>
+      <text x="288" y="178" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Concrete behavioral examples</text>
 
       <!-- Function row -->
-      <rect x="272" y="278" width="408" height="92" rx="12" fill="url(#fnGrad)" stroke="#6A4CA0" stroke-width="1.4"/>
-      <circle cx="298" cy="324" r="15" fill="#6A4CA0"/>
-      <text x="298" y="329" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">F</text>
-      <text x="326" y="303" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="11" letter-spacing=".08em" fill="#6A4CA0">FUNCTION · call-level guide</text>
-      <text x="326" y="324" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="13.5" fill="#171C26">Per-function pitfalls &amp; reasoning</text>
-      <text x="326" y="350" font-family="IBM Plex Mono,monospace" font-size="11" fill="#4A5364">venmo.login: username must be an email address.</text>
+      <rect x="268" y="204" width="344" height="72" rx="12" fill="#F1EDF8" stroke="#6A4CA0" stroke-width="1.4"/>
+      <text x="288" y="234" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#6A4CA0">Function</text>
+      <text x="288" y="256" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Per-function call guides &amp; pitfalls</text>
 
-      <!-- Proactive arrows: WF and ST → student -->
-      <path class="flowdash" d="M680 120 C 706 120, 706 180, 730 188" stroke="#8B94A6" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <path class="flowdash" d="M680 222 H730" stroke="#8B94A6" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
+      <!-- Proactive arrows: WF + ST → student -->
+      <path class="flowdash" d="M612 84 C 646 84, 646 140, 682 146" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path class="flowdash" d="M612 162 H682" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
       <g>
-        <rect x="694" y="152" width="72" height="18" rx="9" fill="#F1F4F9" stroke="#D0D6E0"/>
-        <text x="730" y="164" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".1em" fill="#4A5364">PROACTIVE</text>
+        <rect x="626" y="110" width="66" height="16" rx="8" fill="#FFFFFF" stroke="#D0D6E0"/>
+        <text x="659" y="121" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".1em" fill="#4A5364">PROACTIVE</text>
       </g>
 
       <!-- Reactive arrow: FN → student -->
-      <path class="flowdash" d="M680 324 C 706 324, 706 250, 730 240" stroke="#6A4CA0" stroke-width="2.5" fill="none" marker-end="url(#arr-fn)"/>
+      <path class="flowdash" d="M612 240 C 646 240, 646 186, 682 180" stroke="#6A4CA0" stroke-width="2" fill="none" marker-end="url(#arr-fn)"/>
       <g>
-        <rect x="700" y="280" width="88" height="18" rx="9" fill="#F1EDF8" stroke="#C9BCE0"/>
-        <text x="744" y="292" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".1em" fill="#6A4CA0">REACTIVE · ON ERROR</text>
+        <rect x="626" y="212" width="66" height="16" rx="8" fill="#F5F1FC" stroke="#C9BCE0"/>
+        <text x="659" y="223" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing=".1em" fill="#6A4CA0">ON ERROR</text>
       </g>
 
       <!-- Student block -->
       <g filter="url(#softShadow)">
-        <rect x="740" y="140" width="200" height="140" rx="16" fill="url(#studentGrad)" stroke="#171C26" stroke-width="1.5"/>
+        <rect x="682" y="100" width="188" height="120" rx="16" fill="url(#studentGrad)" stroke="#171C26" stroke-width="1.5"/>
       </g>
-      <text x="760" y="170" font-family="IBM Plex Mono,monospace" font-size="10.5" letter-spacing="1.5" fill="#8B94A6">STUDENT</text>
-      <text x="760" y="193" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#171C26">Qwen3-4B</text>
-      <text x="760" y="210" font-family="Schibsted Grotesk,sans-serif" font-size="11.5" fill="#8B94A6">12× smaller · no fine-tuning</text>
-      <line x1="760" y1="222" x2="920" y2="222" stroke="#E2E6EC"/>
-      <text x="760" y="248" font-family="Schibsted Grotesk,sans-serif" font-size="12" fill="#4A5364">AppWorld acc.</text>
-      <text x="920" y="252" text-anchor="end" font-family="Schibsted Grotesk,sans-serif" font-weight="800" font-size="22" fill="#171C26">49.4%</text>
-      <rect x="760" y="258" width="106" height="18" rx="9" fill="#E7F3EC" stroke="#C5DFCE"/>
-      <text x="813" y="271" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="11.5" fill="#2F7D4F">▲ +34.5 %p gain</text>
+      <text x="776" y="145" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#171C26">Student</text>
+      <text x="776" y="170" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#8B94A6">4B to 8B</text>
+      <text x="776" y="248" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="12.5" fill="#2F7D4F">↑ teacher-level accuracy</text>
     </svg>
     <div class="diagram-caption">
       Teacher trajectories → <b>Workflow · Subtask · Function</b> memory, injected proactively before execution and reactively on error.
