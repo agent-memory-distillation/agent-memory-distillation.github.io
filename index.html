@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Memory Distillation — Empowering Small LLM Agents with Hierarchical Teacher Memory</title>
+<meta name="description" content="AMD is a training-free framework that transfers structured knowledge from a large teacher agent to a small student agent through hierarchical memory: Workflow, Subtask, and Function.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F7F9;
+  --panel:#FFFFFF;
+  --ink:#171C26;
+  --ink-soft:#4A5364;
+  --ink-faint:#8B94A6;
+  --line:#E2E6EC;
+  --wf:#2E5E8C;
+  --st:#C05E1A;
+  --fn:#6A4CA0;
+  --wf-bg:#EBF2F8;
+  --st-bg:#FAF0E6;
+  --fn-bg:#F1EDF8;
+  --ok:#2F7D4F;
+  --display:'Schibsted Grotesk',system-ui,sans-serif;
+  --serif:'Source Serif 4',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--wf);color:#fff}
+a{color:var(--wf)}
+a:focus-visible,button:focus-visible,.figcard:focus-visible{outline:2px solid var(--wf);outline-offset:3px;border-radius:4px}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(246,247,249,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:24px;font-family:var(--display);font-size:14px}
+.nav-logo{font-weight:800;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-logo .tri{display:inline-flex;flex-direction:column;gap:2px}
+.nav-logo .tri span{height:3px;border-radius:2px;display:block}
+.nav-logo .tri span:nth-child(1){width:16px;background:var(--wf)}
+.nav-logo .tri span:nth-child(2){width:11px;background:var(--st)}
+.nav-logo .tri span:nth-child(3){width:6px;background:var(--fn)}
+.nav-links{margin-left:auto;display:flex;gap:20px}
+.nav-links a{color:var(--ink-soft);text-decoration:none;font-weight:500}
+.nav-links a:hover{color:var(--ink)}
+@media(max-width:640px){.nav-links{display:none}}
+
+/* ---------- hero ---------- */
+.hero{max-width:1100px;margin:0 auto;padding:72px 24px 40px;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;color:var(--ink-faint);text-transform:uppercase}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.6vw,52px);line-height:1.12;letter-spacing:-.015em;margin:16px auto 10px;max-width:900px}
+.subtitle{font-family:var(--display);font-weight:500;font-size:clamp(17px,2.2vw,22px);color:var(--ink-soft);max-width:760px;margin:0 auto}
+.authors{margin-top:26px;font-family:var(--display);font-size:16.5px}
+.authors a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.authors a:hover{border-color:var(--ink)}
+.authors sup{color:var(--ink-faint);font-size:.7em}
+.affil{margin-top:8px;color:var(--ink-faint);font-family:var(--display);font-size:14px}
+.btn-row{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:14.5px;padding:10px 20px;border-radius:999px;text-decoration:none;border:1.5px solid var(--ink);color:var(--ink);background:transparent;transition:background .15s,color .15s;cursor:pointer}
+.btn:hover{background:var(--ink);color:#fff}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:hover{background:var(--wf);border-color:var(--wf)}
+.btn svg{width:15px;height:15px;flex:none}
+
+/* ---------- hero diagram ---------- */
+.diagram-wrap{max-width:920px;margin:52px auto 0;padding:0 24px}
+.diagram-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 20px 14px;box-shadow:0 1px 2px rgba(23,28,38,.04),0 12px 32px -18px rgba(23,28,38,.14)}
+.diagram-card svg{width:100%;height:auto;display:block}
+.diagram-caption{font-family:var(--display);font-size:13.5px;color:var(--ink-faint);text-align:center;padding:12px 12px 10px}
+@media(prefers-reduced-motion:no-preference){
+  .rise{opacity:0;transform:translateY(10px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .rise.d1{animation-delay:.15s}.rise.d2{animation-delay:.3s}.rise.d3{animation-delay:.45s}.rise.d4{animation-delay:.6s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .flowdash{stroke-dasharray:6 6;animation:dash 1.4s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-24}}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+}
+
+/* ---------- stats strip ---------- */
+.stats{max-width:960px;margin:44px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;text-align:left;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:4px}
+.stat:nth-child(1)::before{background:var(--wf)}
+.stat:nth-child(2)::before{background:var(--st)}
+.stat:nth-child(3)::before{background:var(--fn)}
+.stat:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(23,28,38,.25)}
+.stat b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(30px,3.4vw,40px);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat:nth-child(1) b{color:var(--wf)}
+.stat:nth-child(2) b{color:var(--st)}
+.stat:nth-child(3) b{color:var(--fn)}
+.stat span{font-family:var(--display);font-size:13.5px;color:var(--ink-soft);line-height:1.5;display:block;margin-top:4px}
+.stat .sub{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);letter-spacing:.04em;text-transform:uppercase;display:block;margin-top:10px}
+@media(max-width:680px){.stats{grid-template-columns:1fr}}
+
+/* ---------- sections ---------- */
+section{max-width:960px;margin:0 auto;padding:76px 24px 0}
+.sec-label{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px}
+h2{font-family:var(--display);font-weight:700;letter-spacing:-.01em;font-size:clamp(24px,3vw,32px);margin-bottom:14px}
+.lead{font-size:18px;max-width:820px;color:var(--ink-soft)}
+strong{font-weight:600;color:var(--ink)}
+code,.mem{font-family:var(--mono);font-size:.86em;font-weight:500;padding:1px 6px;border-radius:5px;white-space:nowrap}
+code{background:#EDEFF3;color:var(--ink)}
+.mem.wf{background:var(--wf-bg);color:var(--wf)}
+.mem.st{background:var(--st-bg);color:var(--st)}
+.mem.fn{background:var(--fn-bg);color:var(--fn)}
+
+/* ---------- figure cards (clickable) ---------- */
+.figcard{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  overflow:hidden;cursor:zoom-in;position:relative;display:block;width:100%;
+  transition:transform .2s,box-shadow .2s,border-color .2s;padding:0;text-align:left;
+}
+.figcard:hover{transform:translateY(-3px);box-shadow:0 16px 36px -20px rgba(23,28,38,.3);border-color:#C9D0DA}
+.figcard img{width:100%;display:block;background:#fff}
+.figcard .fc-cap{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 16px;border-top:1px solid var(--line);
+  font-family:var(--display);font-size:13px;color:var(--ink-soft);
+}
+.figcard .fc-cap b{font-weight:700;color:var(--ink)}
+.figcard .zoom{
+  flex:none;font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  color:var(--ink-faint);display:inline-flex;align-items:center;gap:5px;
+}
+.figcard .zoom svg{width:13px;height:13px}
+.figcard.crop img{max-height:420px;object-fit:cover;object-position:top}
+.figcard.crop::after{
+  content:"";position:absolute;left:0;right:0;bottom:41px;height:70px;pointer-events:none;
+  background:linear-gradient(transparent,#fff);
+}
+.fig-grid{display:grid;gap:16px;margin-top:24px}
+.fig-grid.two{grid-template-columns:1fr 1fr}
+@media(max-width:720px){.fig-grid.two{grid-template-columns:1fr}}
+
+/* motivation cards */
+.mot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.mot{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;transition:transform .2s,box-shadow .2s}
+.mot:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(23,28,38,.22)}
+.mot .tag{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);letter-spacing:.06em}
+.mot h3{font-family:var(--display);font-size:16.5px;font-weight:700;margin:8px 0 6px}
+.mot p{font-size:14px;color:var(--ink-soft);line-height:1.5}
+.mot.ours{border-color:var(--wf);box-shadow:0 0 0 1px var(--wf)}
+.mot.ours .tag{color:var(--wf)}
+@media(max-width:720px){.mot-grid{grid-template-columns:1fr}}
+
+/* method cards */
+.mem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.mem-card{border-radius:14px;padding:20px;border:1px solid var(--line);background:var(--panel);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.mem-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(23,28,38,.22)}
+.mem-card::before{content:"";position:absolute;inset:0 auto 0 0;width:5px}
+.mem-card.wf::before{background:var(--wf)}
+.mem-card.st::before{background:var(--st)}
+.mem-card.fn::before{background:var(--fn)}
+.mem-card .level{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+.mem-card.wf .level{color:var(--wf)}
+.mem-card.st .level{color:var(--st)}
+.mem-card.fn .level{color:var(--fn)}
+.mem-card h3{font-family:var(--display);font-size:18px;font-weight:700;margin:5px 0 6px}
+.mem-card p{font-size:14px;color:var(--ink-soft);line-height:1.5}
+.mem-card .inject{margin-top:12px;font-family:var(--display);font-size:12px;font-weight:600;display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink-soft)}
+@media(max-width:720px){.mem-grid{grid-template-columns:1fr}}
+
+/* analysis findings */
+.find-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.find-grid .figcard .fc-head{padding:16px 16px 0}
+.find-grid .figcard h3{font-family:var(--display);font-size:16px;font-weight:700;line-height:1.35}
+.find-grid .figcard .fc-head p{font-family:var(--display);font-size:13.5px;color:var(--ink-soft);margin-top:4px;line-height:1.5}
+.find-grid .figcard img{margin-top:14px;border-top:1px solid var(--line);padding:12px;max-height:280px;object-fit:contain}
+@media(max-width:720px){.find-grid{grid-template-columns:1fr}}
+
+/* bibtex */
+.bib{background:#1E2430;color:#D8DEE9;border-radius:16px;margin-top:26px;font-family:var(--mono);font-size:13px;line-height:1.6;position:relative;overflow:auto}
+.bib pre{padding:24px 26px;white-space:pre}
+.copy-btn{position:absolute;top:14px;right:14px;font-family:var(--display);font-size:12.5px;font-weight:600;background:rgba(255,255,255,.1);color:#D8DEE9;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 12px;cursor:pointer}
+.copy-btn:hover{background:rgba(255,255,255,.18)}
+
+/* lightbox */
+.lightbox{
+  position:fixed;inset:0;z-index:100;display:none;
+  background:rgba(15,18,26,.86);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:32px;cursor:zoom-out;
+}
+.lightbox.open{display:flex}
+.lightbox img{max-width:min(1100px,94vw);max-height:82vh;border-radius:10px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.lightbox .lb-cap{
+  position:absolute;bottom:22px;left:0;right:0;text-align:center;
+  font-family:var(--display);font-size:14px;color:#D8DEE9;pointer-events:none;padding:0 24px;
+}
+.lightbox .lb-close{
+  position:absolute;top:18px;right:22px;width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;
+  font-size:20px;line-height:1;cursor:pointer;font-family:var(--display);
+}
+.lightbox .lb-close:hover{background:rgba(255,255,255,.22)}
+@media(prefers-reduced-motion:no-preference){
+  .lightbox.open img{animation:lbin .25s cubic-bezier(.2,.7,.2,1)}
+  @keyframes lbin{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+}
+
+footer{margin-top:88px;border-top:1px solid var(--line);padding:36px 24px 48px;text-align:center;font-family:var(--display);font-size:13.5px;color:var(--ink-faint)}
+footer a{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Page">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#top" aria-label="AMD home">
+      <span class="tri" aria-hidden="true"><span></span><span></span><span></span></span>
+      AMD
+    </a>
+    <div class="nav-links">
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#analysis">Analysis</a>
+      <a href="#case">Case Study</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="eyebrow rise">Submitted to ACL ARR · May 2026</div>
+  <h1 class="rise d1">Agent Memory Distillation</h1>
+  <p class="subtitle rise d1">Empowering Small LLM Agents with Hierarchical Teacher Memory</p>
+
+  <div class="authors rise d2">
+    <a href="#">Taeil Kim</a><sup>1</sup> &nbsp;·&nbsp;
+    <a href="#">Kangsan Kim</a><sup>1</sup> &nbsp;·&nbsp;
+    <a href="#">Sung Ju Hwang</a><sup>1,2†</sup>
+  </div>
+  <div class="affil rise d2"><sup>1</sup>KAIST &nbsp;&nbsp; <sup>2</sup>DeepAuto.ai</div>
+
+  <div class="btn-row rise d3">
+    <a class="btn primary" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+      Paper
+    </a>
+    <a class="btn" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8l8 8M16 8l-8 8"/></svg>
+      arXiv
+    </a>
+    <a class="btn" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-1-2.6c3.2-.4 6.5-1.6 6.5-7A5.4 5.4 0 0 0 20 4.8 5 5 0 0 0 19.9 1S18.7.6 16 2.5a13.4 13.4 0 0 0-7 0C6.3.6 5.1 1 5.1 1A5 5 0 0 0 5 4.8a5.4 5.4 0 0 0-1.5 3.7c0 5.4 3.3 6.6 6.4 7a3.4 3.4 0 0 0-1 2.6V22"/></svg>
+      Code
+    </a>
+    <a class="btn" href="#bibtex">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+      BibTeX
+    </a>
+  </div>
+</header>
+
+<div class="diagram-wrap rise d4">
+  <div class="diagram-card">
+    <svg viewBox="0 0 880 330" role="img" aria-label="AMD overview: a teacher agent's successful trajectories are distilled into three memory levels — Workflow, Subtask, and Function — which are injected into a small student agent proactively and reactively.">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8B94A6"/>
+        </marker>
+        <marker id="arr-fn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#6A4CA0"/>
+        </marker>
+      </defs>
+      <rect x="30" y="112" width="168" height="96" rx="14" fill="#171C26"/>
+      <text x="114" y="152" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="18" fill="#fff">Teacher</text>
+      <text x="114" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#AEB6C6">GPT-5-mini</text>
+      <text x="114" y="230" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#8B94A6">successful trajectories 𝒟₊ᵀ</text>
+      <path class="flowdash" d="M198 160 H258" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="228" y="146" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#8B94A6">distill</text>
+      <rect x="262" y="42" width="356" height="248" rx="16" fill="#F6F7F9" stroke="#E2E6EC"/>
+      <text x="440" y="30" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" letter-spacing="1.5" fill="#8B94A6">HIERARCHICAL MEMORY 𝓜</text>
+      <rect x="284" y="62" width="312" height="62" rx="10" fill="#EBF2F8" stroke="#2E5E8C" stroke-width="1.5"/>
+      <text x="302" y="88" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#2E5E8C">Workflow</text>
+      <text x="302" y="108" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Task-level strategy &amp; plan</text>
+      <rect x="284" y="134" width="312" height="62" rx="10" fill="#FAF0E6" stroke="#C05E1A" stroke-width="1.5"/>
+      <text x="302" y="160" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#C05E1A">Subtask</text>
+      <text x="302" y="180" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Concrete behavioral examples</text>
+      <rect x="284" y="206" width="312" height="62" rx="10" fill="#F1EDF8" stroke="#6A4CA0" stroke-width="1.5"/>
+      <text x="302" y="232" font-family="IBM Plex Mono,monospace" font-weight="600" font-size="14" fill="#6A4CA0">Function</text>
+      <text x="302" y="252" font-family="Schibsted Grotesk,sans-serif" font-size="12.5" fill="#4A5364">Per-function call guides &amp; pitfalls</text>
+      <path class="flowdash" d="M596 93 C 660 93, 660 140, 706 148" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path class="flowdash" d="M596 165 H706" stroke="#8B94A6" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="652" y="128" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#8B94A6">proactive</text>
+      <path class="flowdash" d="M596 237 C 660 237, 660 192, 706 184" stroke="#6A4CA0" stroke-width="2" fill="none" marker-end="url(#arr-fn)"/>
+      <text x="652" y="226" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6A4CA0">on error</text>
+      <rect x="710" y="122" width="140" height="76" rx="14" fill="#fff" stroke="#171C26" stroke-width="2"/>
+      <text x="780" y="155" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="700" font-size="16" fill="#171C26">Student</text>
+      <text x="780" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#8B94A6">4B – 8B</text>
+      <text x="780" y="226" text-anchor="middle" font-family="Schibsted Grotesk,sans-serif" font-weight="600" font-size="12.5" fill="#2F7D4F">↑ teacher-level accuracy</text>
+    </svg>
+    <div class="diagram-caption">
+      Teacher trajectories → <b>Workflow · Subtask · Function</b> memory → injected proactively before execution &amp; reactively on error.
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <b><span class="count" data-target="34.5" data-decimals="1" data-prefix="+" data-suffix="%p">+34.5%p</span></b>
+    <span>Qwen3-4B accuracy gain on <strong>AppWorld</strong> — the largest jump of any student</span>
+    <span class="sub">14.88 → 49.40</span>
+  </div>
+  <div class="stat">
+    <b><span class="count" data-target="23.0" data-decimals="1" data-prefix="+" data-suffix="%p">+23.0%p</span></b>
+    <span>Qwen3-4B gain on <strong>BFCL V3</strong> — beating its GPT-5-mini teacher (36.5)</span>
+    <span class="sub">15.50 → 38.50</span>
+  </div>
+  <div class="stat">
+    <b><span class="count" data-target="3.3" data-decimals="1" data-prefix="×" data-suffix="">×3.3</span></b>
+    <span>A 4B model reaches <strong>teacher-level performance</strong> — no training, memory only</span>
+    <span class="sub">49.40 vs. teacher 50.00</span>
+  </div>
+</div>
+
+<section id="abstract" class="reveal">
+  <div class="sec-label">TL;DR</div>
+  <h2>Small agents can't learn from their own failures — so give them the teacher's memory</h2>
+  <p class="lead">
+    Small agents rarely succeed enough to build useful memory, and naive teacher-memory transfer fails
+    on the <strong>capability gap</strong>. AMD closes it — training-free — with memory at three granularities:
+    <span class="mem wf">Workflow</span> plans, <span class="mem st">Subtask</span> examples,
+    and <span class="mem fn">Function</span> call guides.
+  </p>
+
+  <div class="mot-grid">
+    <div class="mot">
+      <div class="tag">(A) STUDENT MEMORY</div>
+      <h3>Too few successes</h3>
+      <p>Memory banks dominated by failed trajectories — self-evolution stalls.</p>
+    </div>
+    <div class="mot">
+      <div class="tag">(B) NAIVE TRANSFER</div>
+      <h3>Advice it can't execute</h3>
+      <p>"Log in first" is useless if the student doesn't know how to log in.</p>
+    </div>
+    <div class="mot ours">
+      <div class="tag">(C) AMD — OURS</div>
+      <h3>Knowledge at every level</h3>
+      <p>Plans + worked examples + call guides bridge the capability gap.</p>
+    </div>
+  </div>
+
+  <div class="fig-grid">
+    <button class="figcard" data-full="assets/fig1.png" data-cap="Figure 1 · Motivation, concept, and results of AMD">
+      <img src="assets/fig1.png" alt="Figure 1: motivation, concept, and results of AMD" loading="lazy" style="max-height:380px;object-fit:contain;padding:12px">
+      <span class="fc-cap"><span><b>Figure 1</b> · Motivation &amp; concept</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>CLICK TO ENLARGE</span></span>
+    </button>
+  </div>
+</section>
+
+<section id="method" class="reveal">
+  <div class="sec-label">Method</div>
+  <h2>Three memories, two injection modes</h2>
+  <p class="lead">
+    Built only from <strong>successful</strong> teacher trajectories. Planning knowledge arrives
+    <strong>before</strong> execution; corrective knowledge arrives <strong>at the moment of failure</strong>.
+  </p>
+
+  <div class="fig-grid">
+    <button class="figcard" data-full="assets/fig2.png" data-cap="Figure 2 · Hierarchical memory generation by teacher & memory usage by student">
+      <img src="assets/fig2.png" alt="Figure 2: hierarchical memory generation and injection in AMD" loading="lazy">
+      <span class="fc-cap"><span><b>Figure 2</b> · Memory generation &amp; injection pipeline</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>CLICK TO ENLARGE</span></span>
+    </button>
+  </div>
+
+  <div class="mem-grid">
+    <div class="mem-card wf">
+      <div class="level">Task level</div>
+      <h3>Workflow</h3>
+      <p>Verbalized strategy with typed placeholders (<code>&lt;ID&gt;</code>, <code>&lt;EMAIL&gt;</code>).</p>
+      <span class="inject">⚡ Proactive · system prompt</span>
+    </div>
+    <div class="mem-card st">
+      <div class="level">Subtask level</div>
+      <h3>Subtask</h3>
+      <p>Coherent segments with the teacher's executable code + observations.</p>
+      <span class="inject">⚡ Proactive · per subtask</span>
+    </div>
+    <div class="mem-card fn">
+      <div class="level">Function level</div>
+      <h3>Function</h3>
+      <p>Per-call records: masked args, returns, and the teacher's reasoning.</p>
+      <span class="inject">🔁 Reactive · on error</span>
+    </div>
+  </div>
+</section>
+
+<section id="results" class="reveal">
+  <div class="sec-label">Results</div>
+  <h2>Students approach — and surpass — their teacher</h2>
+  <p class="lead">
+    AMD beats every memory baseline on every model × benchmark, while baselines often fall
+    <em>below</em> zero-shot. It also cuts interaction turns toward the teacher's efficiency.
+  </p>
+
+  <div class="fig-grid two">
+    <button class="figcard" data-full="assets/tab1.png" data-cap="Table 1 · Main results across three benchmarks — Δ shows absolute gains of AMD over zero-shot">
+      <img src="assets/tab1.png" alt="Table 1: main results across AppWorld, BFCL V3, ToolSandbox" loading="lazy" style="max-height:420px;object-fit:contain;padding:12px">
+      <span class="fc-cap"><span><b>Table 1</b> · Main results</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>CLICK TO ENLARGE</span></span>
+    </button>
+    <button class="figcard" data-full="assets/fig3.png" data-cap="Figure 3 · Interaction steps — AMD brings the student's turn count closer to the teacher's">
+      <img src="assets/fig3.png" alt="Figure 3: interaction steps on two benchmarks" loading="lazy" style="max-height:420px;object-fit:contain;padding:12px">
+      <span class="fc-cap"><span><b>Figure 3</b> · Interaction efficiency</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>CLICK TO ENLARGE</span></span>
+    </button>
+  </div>
+</section>
+
+<section id="analysis" class="reveal">
+  <div class="sec-label">Analysis</div>
+  <h2>What makes distillation work</h2>
+
+  <div class="find-grid">
+    <button class="figcard" data-full="assets/tab2.png" data-cap="Table 2 · Ablation on memory types — Subtask memory drives the largest gain">
+      <span class="fc-head">
+        <h3><span class="mem st">Subtask</span> memory drives the largest gain</h3>
+        <p>+25.0%p on AppWorld over Workflow alone (Qwen3-4B).</p>
+      </span>
+      <img src="assets/tab2.png" alt="Table 2: ablation study on memory types" loading="lazy">
+      <span class="fc-cap"><span><b>Table 2</b> · Ablation</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>ENLARGE</span></span>
+    </button>
+
+    <button class="figcard" data-full="assets/tab3.png" data-cap="Table 3 · Effect of teacher agents — accessibility matters as much as raw accuracy">
+      <span class="fc-head">
+        <h3>Stronger teacher ≠ better teacher for 4B</h3>
+        <p>GPT-5-mini (50%) beats DeepSeek V4 Pro (82%) as Qwen3-4B's teacher.</p>
+      </span>
+      <img src="assets/tab3.png" alt="Table 3: effect of teacher agents on AppWorld" loading="lazy">
+      <span class="fc-cap"><span><b>Table 3</b> · Teacher effect</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>ENLARGE</span></span>
+    </button>
+
+    <button class="figcard" data-full="assets/fig4.png" data-cap="Figure 4 · Effect of student model size — accuracy gain peaks at 4B (+34.5%p)">
+      <span class="fc-head">
+        <h3>4B students benefit most</h3>
+        <p>Gain peaks at 4B (+34.5%p) across Qwen3 1.7B → 14B.</p>
+      </span>
+      <img src="assets/fig4.png" alt="Figure 4: effect of student model size" loading="lazy">
+      <span class="fc-cap"><span><b>Figure 4</b> · Model size</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>ENLARGE</span></span>
+    </button>
+
+    <button class="figcard" data-full="assets/fig5.png" data-cap="Figure 5 · Effect of retrieval count k — k=1 is near-optimal for all memory types">
+      <span class="fc-head">
+        <h3>Retrieve one, not many</h3>
+        <p>k=1 is near-optimal; Subtask accuracy falls 49.4 → 33.3 as k→5.</p>
+      </span>
+      <img src="assets/fig5.png" alt="Figure 5: effect of retrieval count k" loading="lazy">
+      <span class="fc-cap"><span><b>Figure 5</b> · Retrieval count</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>ENLARGE</span></span>
+    </button>
+
+    <button class="figcard" data-full="assets/tab4.png" data-cap="Table 4 · Memory representation — prose for plans, code for execution">
+      <span class="fc-head">
+        <h3>Prose for plans, code for execution</h3>
+        <p>All-prose memory collapses accuracy to 26.2%.</p>
+      </span>
+      <img src="assets/tab4.png" alt="Table 4: effect of memory representation" loading="lazy">
+      <span class="fc-cap"><span><b>Table 4</b> · Representation</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>ENLARGE</span></span>
+    </button>
+
+    <div class="mot" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="tag">ROBUSTNESS</div>
+      <h3>Gains survive disjoint evaluation</h3>
+      <p>Under cross-split (7:3) and self-excluded retrieval, hierarchical memory still gives monotonic gains — genuine transfer, not task overlap. (Appendix B.3)</p>
+    </div>
+  </div>
+</section>
+
+<section id="case" class="reveal">
+  <div class="sec-label">Case Study</div>
+  <h2>Each memory fixes a distinct failure</h2>
+  <p class="lead">
+    One Venmo task, three cascading failures — <span class="mem wf">Workflow</span> fixes the month-scope filter,
+    <span class="mem st">Subtask</span> escapes a date-parsing loop, <span class="mem fn">Function</span> fixes
+    a dict-key crash. All three were necessary: <strong>✓ solved in 7 steps.</strong>
+  </p>
+
+  <div class="fig-grid">
+    <button class="figcard crop" data-full="assets/fig6.png" data-cap="Figure 6 · Cascading effect of each memory type — task ccf4b82_1">
+      <img src="assets/fig6.png" alt="Figure 6: cascading effect of each memory type, full case study" loading="lazy">
+      <span class="fc-cap"><span><b>Figure 6</b> · Full case study (WF → ST → FN)</span><span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>CLICK TO ENLARGE</span></span>
+    </button>
+  </div>
+</section>
+
+<section id="bibtex" class="reveal">
+  <div class="sec-label">Citation</div>
+  <h2>BibTeX</h2>
+  <div class="bib">
+    <button class="copy-btn" id="copyBib" aria-label="Copy BibTeX to clipboard">Copy</button>
+    <pre id="bibText">@article{kim2026amd,
+  title   = {Agent Memory Distillation: Empowering Small LLM Agents
+             with Hierarchical Teacher Memory},
+  author  = {Kim, Taeil and Kim, Kangsan and Hwang, Sung Ju},
+  journal = {ACL Rolling Review},
+  year    = {2026}
+}</pre>
+  </div>
+</section>
+
+<footer>
+  <p>Agent Memory Distillation · KAIST &amp; DeepAuto.ai · 2026</p>
+  <p style="margin-top:6px">Questions? Reach out via the <a href="#">paper</a> or open an issue on <a href="#">GitHub</a>.</p>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged figure">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script>
+// BibTeX copy
+document.getElementById('copyBib').addEventListener('click',function(){
+  navigator.clipboard.writeText(document.getElementById('bibText').textContent).then(()=>{
+    this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy'},1600);
+  });
+});
+
+// Lightbox
+const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
+let lastFocus=null;
+function openLB(src,cap,origin){
+  lastFocus=origin;lbImg.src=src;lbImg.alt=cap;lbCap.textContent=cap;
+  lb.classList.add('open');document.body.style.overflow='hidden';
+  document.getElementById('lbClose').focus();
+}
+function closeLB(){
+  lb.classList.remove('open');document.body.style.overflow='';
+  if(lastFocus)lastFocus.focus();
+}
+document.querySelectorAll('.figcard').forEach(el=>{
+  el.addEventListener('click',()=>openLB(el.dataset.full,el.dataset.cap,el));
+});
+lb.addEventListener('click',e=>{if(e.target!==lbImg)closeLB();});
+document.getElementById('lbClose').addEventListener('click',closeLB);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lb.classList.contains('open'))closeLB();});
+
+// Count-up stats
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateCount(el){
+  const target=parseFloat(el.dataset.target),dec=+el.dataset.decimals,pre=el.dataset.prefix,suf=el.dataset.suffix;
+  if(reduced){el.textContent=pre+target.toFixed(dec)+suf;return;}
+  const dur=1400,t0=performance.now();
+  function tick(t){
+    const p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);
+    el.textContent=pre+(target*e).toFixed(dec)+suf;
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+// Scroll reveal + trigger counters
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('in');
+      en.target.querySelectorAll('.count:not(.done)').forEach(c=>{c.classList.add('done');animateCount(c);});
+      io.unobserve(en.target);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.reveal,.stats').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
